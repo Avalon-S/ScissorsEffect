@@ -1,0 +1,304 @@
+{
+  "protocol": "E5 stage-2 pre-registration, derived from stage-1 gradient-moment measurements only. No attack outcome was available when this file was written.",
+  "generated_utc": "2026-08-01T16:37:52.483102+00:00",
+  "input": "results/ssa_regime_v2/method_gcr.csv",
+  "prediction_rule": [
+    "i.   GCR_eff(SSA) > GCR_eff(none)      (rightward regime shift)",
+    "ii.  the shift increases with rho",
+    "iii. robust surrogate: D(SSA) < D(none) < 0",
+    "iv.  standard surrogate: D moves toward zero as the shift grows",
+    "v.   the shift is specific to SSA, not shared by admix/sia/bsr"
+  ],
+  "falsification": "Any failed check is reported. If (i), (ii) or (v) fails, Corollary 2 does not explain why SSA is the exception and is reported as an unresolved method interaction, moving out of the main text.",
+  "two_readings": "perdraw = variance of a single method draw; ensemble_averaged = variance of the m_S-averaged gradient, which is what Corollary 2 defines (Cov = sigma^2 S^2 / m_S) and what the attack actually uses. BOTH are registered before stage 2 so that neither can be selected after seeing the outcome.",
+  "stage1_checks": [
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "perdraw": {
+        "base_GCR": 0.9738,
+        "check_i_ssa_rightward": false,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": false,
+        "ssa_shifts": {
+          "ssa_rho0.0": -0.5555,
+          "ssa_rho0.25": -0.6879,
+          "ssa_rho0.5": -0.7696,
+          "ssa_rho0.75": -0.8149,
+          "ssa_rho1.0": -0.8412
+        },
+        "spatial_shifts": {
+          "admix": -0.3906,
+          "sia": -0.7078,
+          "bsr": -0.6958
+        }
+      },
+      "ensemble_averaged": {
+        "base_GCR": 0.9738,
+        "check_i_ssa_rightward": false,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": false,
+        "ssa_shifts": {
+          "ssa_rho0.0": -0.0388,
+          "ssa_rho0.25": -0.0849,
+          "ssa_rho0.5": -0.1369,
+          "ssa_rho0.75": -0.1831,
+          "ssa_rho1.0": -0.2202
+        },
+        "spatial_shifts": {
+          "admix": -0.0193,
+          "sia": -0.0951,
+          "bsr": -0.0888
+        }
+      }
+    },
+    {
+      "source": "ResNet50",
+      "perdraw": {
+        "base_GCR": 0.5087,
+        "check_i_ssa_rightward": false,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": false,
+        "ssa_shifts": {
+          "ssa_rho0.0": -0.4137,
+          "ssa_rho0.25": -0.4289,
+          "ssa_rho0.5": -0.4399,
+          "ssa_rho0.75": -0.4457,
+          "ssa_rho1.0": -0.4494
+        },
+        "spatial_shifts": {
+          "admix": -0.3453,
+          "sia": -0.3531,
+          "bsr": -0.4047
+        }
+      },
+      "ensemble_averaged": {
+        "base_GCR": 0.5087,
+        "check_i_ssa_rightward": true,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": false,
+        "ssa_shifts": {
+          "ssa_rho0.0": 0.1686,
+          "ssa_rho0.25": 0.1258,
+          "ssa_rho0.5": 0.0878,
+          "ssa_rho0.75": 0.0648,
+          "ssa_rho1.0": 0.049
+        },
+        "spatial_shifts": {
+          "admix": 0.2368,
+          "sia": 0.2779,
+          "bsr": 0.1903
+        }
+      }
+    },
+    {
+      "source": "Salman_eps2.0",
+      "perdraw": {
+        "base_GCR": 0.981,
+        "check_i_ssa_rightward": false,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": false,
+        "ssa_shifts": {
+          "ssa_rho0.0": -0.4776,
+          "ssa_rho0.25": -0.6223,
+          "ssa_rho0.5": -0.7184,
+          "ssa_rho0.75": -0.7767,
+          "ssa_rho1.0": -0.8125
+        },
+        "spatial_shifts": {
+          "admix": -0.4153,
+          "sia": -0.7652,
+          "bsr": -0.7144
+        }
+      },
+      "ensemble_averaged": {
+        "base_GCR": 0.981,
+        "check_i_ssa_rightward": false,
+        "check_ii_monotone_in_rho": false,
+        "check_v_ssa_specific": true,
+        "ssa_shifts": {
+          "ssa_rho0.0": -0.028,
+          "ssa_rho0.25": -0.063,
+          "ssa_rho0.5": -0.1041,
+          "ssa_rho0.75": -0.144,
+          "ssa_rho1.0": -0.1789
+        },
+        "spatial_shifts": {
+          "admix": -0.0296,
+          "sia": -0.1347,
+          "bsr": -0.1019
+        }
+      }
+    }
+  ],
+  "per_method_predictions": [
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "admix",
+      "GCR_eff": 0.5833,
+      "shift_vs_none": -0.3906,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "bsr",
+      "GCR_eff": 0.278,
+      "shift_vs_none": -0.6958,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "sia",
+      "GCR_eff": 0.266,
+      "shift_vs_none": -0.7078,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "ssa_rho0.0",
+      "GCR_eff": 0.4183,
+      "shift_vs_none": -0.5555,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "ssa_rho0.25",
+      "GCR_eff": 0.2859,
+      "shift_vs_none": -0.6879,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "ssa_rho0.5",
+      "GCR_eff": 0.2043,
+      "shift_vs_none": -0.7696,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "ssa_rho0.75",
+      "GCR_eff": 0.1589,
+      "shift_vs_none": -0.8149,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Engstrom2019Robustness_ImageNet",
+      "method": "ssa_rho1.0",
+      "GCR_eff": 0.1326,
+      "shift_vs_none": -0.8412,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "admix",
+      "GCR_eff": 0.1634,
+      "shift_vs_none": -0.3453,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "bsr",
+      "GCR_eff": 0.104,
+      "shift_vs_none": -0.4047,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "sia",
+      "GCR_eff": 0.1556,
+      "shift_vs_none": -0.3531,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "ssa_rho0.0",
+      "GCR_eff": 0.095,
+      "shift_vs_none": -0.4137,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "ssa_rho0.25",
+      "GCR_eff": 0.0799,
+      "shift_vs_none": -0.4289,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "ssa_rho0.5",
+      "GCR_eff": 0.0688,
+      "shift_vs_none": -0.4399,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "ssa_rho0.75",
+      "GCR_eff": 0.063,
+      "shift_vs_none": -0.4457,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "ResNet50",
+      "method": "ssa_rho1.0",
+      "GCR_eff": 0.0593,
+      "shift_vs_none": -0.4494,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "admix",
+      "GCR_eff": 0.5657,
+      "shift_vs_none": -0.4153,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "bsr",
+      "GCR_eff": 0.2666,
+      "shift_vs_none": -0.7144,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "sia",
+      "GCR_eff": 0.2158,
+      "shift_vs_none": -0.7652,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "ssa_rho0.0",
+      "GCR_eff": 0.5034,
+      "shift_vs_none": -0.4776,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "ssa_rho0.25",
+      "GCR_eff": 0.3586,
+      "shift_vs_none": -0.6223,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "ssa_rho0.5",
+      "GCR_eff": 0.2626,
+      "shift_vs_none": -0.7184,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "ssa_rho0.75",
+      "GCR_eff": 0.2042,
+      "shift_vs_none": -0.7767,
+      "predicted_effect_on_D": "less negative / toward positive"
+    },
+    {
+      "source": "Salman_eps2.0",
+      "method": "ssa_rho1.0",
+      "GCR_eff": 0.1684,
+      "shift_vs_none": -0.8125,
+      "predicted_effect_on_D": "less negative / toward positive"
+    }
+  ],
+  "sha256_of_body": "183e036a1f1da9f3e8f7162a2b97ccbdb4eb76ba53ab0f6376c759dbb86bb405"
+}

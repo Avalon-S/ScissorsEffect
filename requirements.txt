@@ -1,0 +1,30 @@
+# Transfer Attack Framework
+# Built on top of RobustBench
+
+robustbench
+torchattacks>=3.4.0
+torch>=1.10.0
+torchvision
+timm
+numpy
+pandas
+scipy
+sympy
+pyyaml
+tqdm
+matplotlib
+seaborn
+easydict
+torch-dct
+
+# open_clip_torch is needed only for the CLIP surrogate (Appendix: CLIP transfer)
+open_clip_torch
+
+# TransferAttack is needed by run_modern_attacks.py,
+# run_modern_attacks_perimage.py, run_classical_attacks_cifar.py,
+# run_gradient_alignment.py, run_ssa_decomposition.py and
+# run_ssa_regime_sweep.py. It is not on PyPI; every number we report from it was
+# produced at commit 8bfe600c21dddc3be974bcca5b17f3183dbb972c:
+#   git clone https://github.com/Trustworthy-AI-Group/TransferAttack
+#   git -C TransferAttack checkout 8bfe600c21dddc3be974bcca5b17f3183dbb972c
+# then put it on PYTHONPATH.

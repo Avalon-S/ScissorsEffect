@@ -1,0 +1,16 @@
+# Normalise line endings in source, but never touch the released data.
+#
+# results/moment_decomposition_canonical/SHA256SUMS records a full-file sha256 of
+# each CSV, and those CSVs are CRLF. The prereg records are hashed the same way.
+# If git rewrote CRLF to LF on commit or back on checkout, every one of those
+# hashes would change and validate_canonical_moments.py -- the blocking check the
+# paper points readers at -- would fail on a fresh clone, for no reason a reader
+# could diagnose. -text keeps the bytes exactly as released.
+
+* text=auto
+
+results/** -text
+prereg/** -text
+*.npz binary
+*.png binary
+*.pdf binary

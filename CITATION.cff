@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper."
+title: "The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts Transfer Attacks"
+authors:
+  - family-names: Jiang
+    given-names: Yuhang
+    affiliation: University of Trento
+  - family-names: Chen
+    given-names: Xiaojing
+    affiliation: Anhui University
+year: 2026
+license: MIT
+repository-code: "https://github.com/Avalon-S/ScissorsEffect"
+url: "https://avalon-s.github.io/ScissorsEffect/"
+preferred-citation:
+  type: article
+  title: "The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts Transfer Attacks"
+  authors:
+    - family-names: Jiang
+      given-names: Yuhang
+    - family-names: Chen
+      given-names: Xiaojing
+  journal: "Transactions on Machine Learning Research"
+  year: 2026
+  url: "https://openreview.net/forum?id=b4pCcgJM0M"

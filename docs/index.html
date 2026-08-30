@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts Transfer Attacks</title>
+<meta name="description" content="Resize-based Input Diversity improves transfer attacks from standard surrogates and degrades them from adversarially trained ones. TMLR 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <ul>
+    <li><a href="#effect">The Effect</a></li>
+    <li><a href="#sweep">Robustness</a></li>
+    <li><a href="#what">What Breaks</a></li>
+    <li><a href="#why">Why</a></li>
+    <li><a href="#rule">The Rule</a></li>
+    <li><a href="#general">Generality</a></li>
+    <li><a href="#limits">Limits</a></li>
+    <li><a href="#cite">BibTeX</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Adversarial Robustness &middot; Transfer Attacks &middot; Evaluation</span>
+    <h1>The Scissors Effect</h1>
+    <p class="subtitle">When Resize-Based <strong>Input Diversity</strong> Helps or Hurts Transfer Attacks</p>
+    <p class="authors">
+      <a href="https://avalon-s.github.io/" target="_blank" rel="noopener">Yuhang Jiang</a><sup>1</sup>,
+      Xiaojing Chen<sup>2</sup>
+    </p>
+    <p class="affil"><sup>1</sup>University of Trento &nbsp;&middot;&nbsp; <sup>2</sup>Anhui University</p>
+    <div class="venue-badge">Accepted at TMLR 2026</div>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="https://arxiv.org/abs/2606.22516" target="_blank" rel="noopener">Paper</a>
+      <a class="btn" href="https://openreview.net/forum?id=b4pCcgJM0M" target="_blank" rel="noopener">OpenReview</a>
+      <a class="btn" id="codeLink" href="https://github.com/Avalon-S/ScissorsEffect" target="_blank" rel="noopener">Code</a>
+      <a class="btn" href="#cite">BibTeX</a>
+    </div>
+  </div>
+</section>
+
+<section id="effect">
+  <div class="container">
+    <div class="section-title">
+      <h2>Same operation. Opposite sign.</h2>
+      <p class="sub">Input Diversity applies a random resize and pad at every attack iteration,
+      and it is enabled by default in most transfer attacks. Hold the attack and the targets
+      fixed, change only the surrogate, and raising the DI probability helps standard surrogates
+      while it hurts robust ones.</p>
+    </div>
+    <div class="card">
+      <div class="ctl">
+        <label for="pSlide">Diversity probability p</label>
+        <input type="range" id="pSlide" min="0" max="10" step="1" value="10">
+        <span class="val" id="pVal">1.0</span>
+        <span style="margin-left:auto">
+          <span class="pill sel" data-panel="0">ImageNet</span><span class="pill" data-panel="1">CIFAR-10</span>
+        </span>
+      </div>
+      <svg id="scissors" viewBox="0 0 900 340" style="width:100%;height:auto"></svg>
+      <div class="readout" id="readout"></div>
+      <p class="src" id="fig1src"></p>
+    </div>
+  </div>
+</section>
+
+<section id="sweep">
+  <div class="container">
+    <div class="section-title">
+      <h2>Turn robustness up. Watch the sign flip.</h2>
+      <p class="sub">Maybe two arbitrary models were compared? We fix the architecture (ResNet-50)
+      and the recipe (PGD-AT) and vary only the adversarial-training budget. The sign flips
+      between the first two settings, and the harm is graded rather than binary.</p>
+    </div>
+    <div class="card">
+      <div class="ctl">
+        <label for="eSlide">Training budget</label>
+        <input type="range" id="eSlide" min="0" max="5" step="1" value="0">
+        <span class="val" id="eVal">0</span>
+      </div>
+      <div class="readout">
+        <div class="chip"><div class="k">MI-FGSM (no DI)</div><div class="v" id="swMI">41.2</div><div class="s">transfer ASR</div></div>
+        <div class="chip"><div class="k">DI-FGSM</div><div class="v" id="swDI">54.2</div><div class="s">transfer ASR</div></div>
+        <div class="chip" id="swChip"><div class="k">DI effect</div><div class="v" id="swD">+13.0</div><div class="s" id="swNote">pp &middot; helps</div></div>
+      </div>
+      <svg id="sweepPlot" viewBox="0 0 900 200" style="width:100%;height:auto;margin-top:1rem"></svg>
+      <p class="src">Tab. 7 &middot; target Swin-B, N=500, 3 seeds, all-images basis. Effects in pp.</p>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="container">
+    <div class="section-title">
+      <h2>It is the resize, not the diversity.</h2>
+      <p class="sub">DI is a resize composed with a translation. A 2&times;2 factorial separates
+      them. On robust surrogates the resize main effect is about four times the translation
+      effect, and the interaction is the one term whose interval contains zero, so the two factors
+      do add and the resize carries the harm.</p>
+    </div>
+    <div class="card">
+      <div style="margin-bottom:1rem">
+        <span class="pill sel" data-fac="robust">Robust surrogates</span><span class="pill" data-fac="standard">Standard surrogates</span>
+      </div>
+      <div class="bars" id="facBars"></div>
+      <p class="src">Tab. 12 &middot; 6 sources &times; 3 targets, N=1000, 5 seeds, p=1, all-images
+      basis, r &gt; 1. Bars are point estimates; thin lines are 95% image-paired bootstrap intervals.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="container">
+    <div class="section-title">
+      <h2>Noisy gradients gain from averaging. Smooth ones only pay for it.</h2>
+      <p class="sub">DI averages the gradient over transformed views, trading a bias against a
+      variance reduction. We measured both directly. The displacement is comparable across the two
+      groups; the variance reduction is not.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:1.2rem">
+      <div class="card-title">What the gradients look like</div>
+      <p style="font-size:.92rem;margin-bottom:.9rem">A standard surrogate's input gradient is
+      scattered and high-frequency. A robust one is spatially consistent and tracks the object.
+      That difference is what the averaging acts on.</p>
+      <img src="static/img/fig2_gradient_analysis_imagenet_opt.png" alt="ImageNet input gradients: original image, standard ResNet-50, robust Engstrom" style="width:100%;border-radius:9px;border:1px solid var(--gray-200)">
+      <p class="src">Fig. 2 (ImageNet) &middot; Columns: the original image, the standard ResNet-50
+      gradient (LGC 0.64), and the robust Engstrom gradient (LGC 0.98).</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Variance of the DI-averaged direction</div>
+        <p style="font-size:.92rem">Relative to a single clean gradient. Below 1 means DI reduced
+        the variance.</p>
+        <div class="bars" id="varBars" style="margin-top:.9rem"></div>
+        <p class="src">Tab. 14 &middot; m=20 EOT draws, image-bootstrap intervals. All six standard
+        ratios lie entirely below 1 and eight of the nine robust ones entirely above.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Local Gradient Consistency</div>
+        <p style="font-size:.92rem">How stable a surrogate's gradient is under a tiny input
+        perturbation. Measurable before any attack is run.</p>
+        <table style="margin-top:.8rem"><thead><tr><th>Model</th><th>HF ratio</th><th>LGC</th></tr></thead>
+        <tbody id="lgcTable"></tbody></table>
+        <p class="src">Tab. 9 &middot; N=200 images, K=5 probes at 1/255. HF is a ratio of
+        log-magnitudes, not of energies.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rule">
+  <div class="container">
+    <div class="section-title">
+      <h2>Should you turn DI on?</h2>
+      <p class="sub">Probe the surrogate's LGC with five local gradient queries, compare against a
+      threshold fixed in advance, and switch. The threshold, the probe scale and the sample count
+      were frozen at their published values, and the per-surrogate predictions were hashed before
+      any held-out attack was run.</p>
+    </div>
+
+    <div class="card">
+      <div class="ctl">
+        <label for="lSlide">Measured LGC</label>
+        <input type="range" id="lSlide" min="0" max="100" step="1" value="64">
+        <span class="val" id="lVal">0.64</span>
+      </div>
+      <div class="gauge">
+        <div class="rail"></div><div class="tau"><span>&tau; = 0.92</span></div>
+        <div class="knob" id="lKnob"></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <div style="margin-top:1rem" id="presets"></div>
+      <p class="src">Sec. 5 &middot; The binary choice costs 0.95 pp [0.50, 1.42] against the best
+      grid value on the one standard surrogate where the two differ, and zero on both robust ones.
+      The curves are monotone in p, so there is no interior optimum to miss.</p>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem">
+      <div class="card-title">Held out: seven surrogates it had never seen</div>
+      <p style="font-size:.92rem;margin-bottom:.6rem">Five standard architectures and two
+      adversarial-training recipes not in the development set. The frozen rule matched the sign on
+      all seven; six of the seven effects are individually resolved.</p>
+      <table><thead><tr><th>Held-out surrogate</th><th>LGC</th><th>rule</th><th>measured D (pp)</th><th>95% CI</th></tr></thead>
+      <tbody id="heldTable"></tbody></table>
+      <p class="src">Tab. 19 &middot; N=1000, 5 seeds, r=0.9, source-and-target clean-correct basis.</p>
+    </div>
+  </div>
+</section>
+
+<section id="general">
+  <div class="container">
+    <div class="section-title">
+      <h2>Ten attacks, 2018&ndash;2024.</h2>
+      <p class="sub">DI degrades all ten on the robust surrogate and helps nine of ten on the
+      standard one. These attacks share images, models and algorithmic ancestry, so this is a
+      dependent panel and not ten independent observations. The tally is a description; the pooled
+      statistics below are what carry the weight.</p>
+    </div>
+
+    <div class="card">
+      <table><thead><tr><th>Attack</th><th>venue</th><th>robust source</th><th>standard source</th></tr></thead>
+      <tbody id="atkTable"></tbody></table>
+      <p class="src">Tab. 5 &middot; Engstrom / ResNet50 &rarr; Swin-B, N=1000, 5 seeds, all-images
+      basis. D in pp.</p>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem">
+      <div class="card-title">With the dependence taken into account</div>
+      <div class="readout" style="margin-top:.7rem">
+        <div class="chip rob"><div class="k">Robust, Swin-B</div><div class="v">&minus;3.92</div><div class="s">[&minus;4.81, &minus;3.04] pp</div></div>
+        <div class="chip std"><div class="k">Standard, Swin-B</div><div class="v">+0.83</div><div class="s">[+0.27, +1.40] pp</div></div>
+        <div class="chip rob"><div class="k">Robust, ConvNeXt-B</div><div class="v">&minus;6.25</div><div class="s">[&minus;7.30, &minus;5.23] pp</div></div>
+        <div class="chip std"><div class="k">Standard, ConvNeXt-B</div><div class="v">+1.38</div><div class="s">[+0.68, +2.06] pp</div></div>
+      </div>
+      <p class="src">Tab. 6 &middot; The mean pairwise correlation of the per-image effect vectors is
+      0.12&ndash;0.15, giving an effective 4.2&ndash;4.9 independent attacks rather than ten. An
+      image-block sign-flip permutation test gives p &lt; 1e&minus;4 on three of the four cells and
+      p = 0.003 on the fourth.</p>
+    </div>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="container">
+    <div class="section-title">
+      <h2>What we did not establish.</h2>
+      <p class="sub">The effect is the claim we stand behind. The mechanism is a bounded candidate
+      and the rule is preliminary. These are the places where each runs out.</p>
+    </div>
+    <div class="card">
+      <ul class="tight">
+        <li><strong>Scale.</strong> The effect is strong on ImageNet and several times smaller at
+        32&times;32. On CIFAR-100, registered in advance as a scope test, it is within 1.5 pp of
+        zero and the direction does not hold.</li>
+        <li><strong>The theory does not fit the measurement.</strong> Modelling the DI gradient as a
+        fixed linear operator applied to the clean gradient leaves a residual of 1.04&ndash;1.28
+        relative to the gradient norm. The crossover theorem shows a reversal is possible under a
+        simplified model; it does not describe the measured gradients.</li>
+        <li><strong>The per-surrogate theoretical threshold failed.</strong> Estimated from measured
+        constants and scored on seven held-out surrogates, it is correct on 2 of 7. We report the
+        constants and offer no per-surrogate predictor.</li>
+        <li><strong>LGC is a regime classifier, not a within-regime predictor.</strong> It saturates
+        across the robust region while the harm still varies several-fold. Its threshold does not
+        carry to CIFAR-10, where it sits inside the standard cluster and misroutes two of four.</li>
+        <li><strong>A corner case.</strong> Salman eps=8/255 ResNet-50 has LGC 0.80 and is routed as
+        standard, on a surrogate DI harms. Its gradient SNR is 0.4, in the range of the standard
+        models rather than of the other robust ones.</li>
+        <li><strong>Provenance is a strong baseline.</strong> Over 27 model&ndash;dataset cases the
+        probe and a training-metadata rule are each correct on 21. We do not claim the probe beats
+        knowing how the surrogate was trained.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="cite">
+  <div class="container">
+    <div class="section-title"><h2>BibTeX</h2></div>
+<pre class="bib">@misc{jiang2026scissors,
+  title         = {The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts Transfer Attacks},
+  author        = {Yuhang Jiang and Xiaojing Chen},
+  year          = {2026},
+  eprint        = {2606.22516},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2606.22516}
+}</pre>
+    <p class="src" style="text-align:center">Every number on this page is transcribed from the
+    accepted manuscript and labelled with the table it comes from. A difference between two attack
+    success rates is reported in percentage points (pp); % is used for rates, image fractions and
+    relative changes.</p>
+  </div>
+</section>
+
+<footer><div class="container">
+  Yuhang Jiang &middot; Xiaojing Chen &nbsp;&mdash;&nbsp; TMLR 2026 &nbsp;&mdash;&nbsp; Paper CC BY 4.0 &middot; Code MIT
+</div></footer>
+
+<script src="static/data.js"></script>
+<script src="static/app.js"></script>
+</body>
+</html>

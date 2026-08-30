@@ -1,0 +1,45 @@
+# Default configuration for transfer attack experiments
+# CIFAR-10, Linf threat model
+
+data:
+  dataset: cifar10
+  n_examples: 1000  # Full eval; use 100 for quick test
+
+attack:
+  threat_model: Linf
+  eps: 0.03137255  # 8/255
+  steps: 10
+  alpha: 0.00784314  # 2/255 (eps/4 is common)
+  
+  # MI-FGSM specific
+  momentum: 1.0
+  
+  # DIM specific  
+  resize_rate: 0.9
+  diversity_prob: 0.5
+  
+  # VMI-FGSM specific
+  beta: 1.5
+  sample_num: 20
+
+models:
+  # Source models for adversarial example generation
+  sources:
+    - Standard
+    - Engstrom2019Robustness
+  
+  # Target models for transfer evaluation
+  targets:
+    - Standard
+    - Carmon2019Unlabeled
+    - Rice2020Overfitting
+    - Gowal2020Uncovering_70_16
+
+eval:
+  batch_size: 64
+  device: cuda:0
+  seed: 42
+
+output:
+  results_dir: results/
+  save_adv: false  # Don't save adversarial examples by default
