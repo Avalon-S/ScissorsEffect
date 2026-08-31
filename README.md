@@ -3,6 +3,7 @@
 [![TMLR 2026](https://img.shields.io/badge/TMLR-2026-8C4A2F?style=flat-square)](https://openreview.net/forum?id=b4pCcgJM0M)
 [![arXiv](https://img.shields.io/badge/arXiv-2606.22516-8C4A2F?style=flat-square&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2606.22516)
 [![Project page](https://img.shields.io/badge/project-page-2A5C7A?style=flat-square)](https://avalon-s.github.io/ScissorsEffect/)
+[![Weights](https://img.shields.io/badge/weights-Hugging%20Face-2A5C7A?style=flat-square)](https://huggingface.co/Avalon-S/ScissorsEffect)
 [![License: MIT](https://img.shields.io/badge/license-MIT-C79A3C?style=flat-square)](LICENSE)
 
 Code for **"The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts
@@ -123,9 +124,19 @@ it at `imagenet/Linf/ARES_ConvNext_Base_AT.pth`. Only `run_recipe_panel.py` read
 it, so every other script runs without it.
 
 **The surrogates we trained.** These five are the only weights in the paper that
-exist nowhere else, so we are preparing them for release on Hugging Face; this
-section will carry the link. Until then, one script trains all of them, one
-recipe, both datasets:
+exist nowhere else, so they are released on Hugging Face at
+[Avalon-S/ScissorsEffect](https://huggingface.co/Avalon-S/ScissorsEffect),
+together with the records the training runs wrote:
+
+```
+pip install -U huggingface_hub
+hf download Avalon-S/ScissorsEffect --local-dir weights
+```
+
+Put `c10_*.pt` in `cifar10/standard/` and `Standard_WRN28_10.pt` in
+`cifar100/Linf/` under your `MODEL_ROOT`; `SHA256SUMS` in that repository checks
+the download. To train them instead, one script does all five, one recipe, both
+datasets:
 
 ```
 python scripts/train_cifar10_standard.py                      # CIFAR-10
