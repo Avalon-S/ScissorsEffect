@@ -318,10 +318,11 @@ transform granularity).
 ## Citation
 
 ```bibtex
-@article{jiang2026scissors,
+@article{jiang2026the,
   title   = {The Scissors Effect: When Resize-Based Input Diversity Helps or Hurts Transfer Attacks},
-  author  = {Jiang, Yuhang and Chen, Xiaojing},
+  author  = {Yuhang Jiang and Xiaojing Chen},
   journal = {Transactions on Machine Learning Research},
+  issn    = {2835-8856},
   year    = {2026},
   url     = {https://openreview.net/forum?id=b4pCcgJM0M}
 }
